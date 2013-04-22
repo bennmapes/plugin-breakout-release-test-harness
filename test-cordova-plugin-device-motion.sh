@@ -1,4 +1,4 @@
-#set -e
+set -e
 version=2.6.0
 release="cordova-$version"
 release_artifact="$release-src.zip"
@@ -82,34 +82,30 @@ plugman_install() {
     if [ $? -eq 0 ]
     then
         
-        info "Installing self into iOS project FooBar"
+        info "Installing iOS"
+        warn "plugman --platform ios --project ./FooBar --plugin $plugin"
         plugman --platform ios --project ./FooBar --plugin $plugin
-        # cdd &>/dev/null
         if [ "$?" = "0" ]
         then
             ok "Plugman successfully installed $plugin into iOS project FooBar."
         else
             error "Plugman did not install $plugin into iOS project FooBar."
         fi
+        echo
         
-        info "Installing self into Android project FooBaz"
+        info "Installing Android" 
+        warn "plugman --platform android --project ./FooBaz --plugin $plugin"        
         plugman --platform android --project ./FooBaz --plugin $plugin
-        # cdd &>/dev/null
         if [ "$?" = "0" ]
         then
             ok "Plugman successfully installed $plugin into Android project FooBaz."
         else
             error "Plugman did not install $plugin into Android project FooBaz."
         fi
+        echo
     else
         warn "Missing Plugman?" "npm install -g plugman"
     fi
-}
-
-# removes test artifacts
-cleanup() {
-    info "Cleanup"
-    rm -rf $release
 }
 
 <<COMMENT
@@ -118,8 +114,21 @@ copy_plugin_tests() {
 }
 COMMENT
 
+# removes test artifacts
+cleanup() {
+    info "Cleanup"
+    rm -rf $release
+}
+
+
 download
 unpack
 native_create
 plugman_install
 cleanup
+
+echo
+error "Tests above should fail in current case."
+error "Installing iOS, and Android should work!"
+warn "TODO" "Copy tests from mobile-spec into $plugin ./test dir."
+echo
