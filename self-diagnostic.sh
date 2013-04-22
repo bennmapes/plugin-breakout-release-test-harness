@@ -3,7 +3,7 @@ version=2.6.0
 release="cordova-$version"
 release_artifact="$release-src.zip"
 release_url="https://www.apache.org/dist/cordova/$release_artifact"
-
+plugin="https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git"
 
 # prints an error message
 # usage:
@@ -81,14 +81,25 @@ plugman_install() {
     which plugman &>/dev/null
     if [ $? -eq 0 ]
     then
+        
         info "Installing self into iOS project FooBar"
-        # plugman --platform ios --project ./FooBar --plugin .
-        cdd &>/dev/null
+        plugman --platform ios --project ./FooBar --plugin $plugin
+        # cdd &>/dev/null
         if [ "$?" = "0" ]
         then
-            ok "Plugin successfully installed to iOS project."
+            ok "Plugman successfully installed $plugin into iOS project FooBar."
         else
-            error "Plugman did not install."
+            error "Plugman did not install $plugin into iOS project FooBar."
+        fi
+        
+        info "Installing self into Android project FooBaz"
+        plugman --platform android --project ./FooBaz --plugin $plugin
+        # cdd &>/dev/null
+        if [ "$?" = "0" ]
+        then
+            ok "Plugman successfully installed $plugin into Android project FooBaz."
+        else
+            error "Plugman did not install $plugin into Android project FooBaz."
         fi
     else
         warn "Missing Plugman?" "npm install -g plugman"
@@ -99,8 +110,6 @@ plugman_install() {
 cleanup() {
     info "Cleanup"
     rm -rf $release
-    #rm -rf FooBar
-    #rm -rf FooBaz
 }
 
 <<COMMENT
