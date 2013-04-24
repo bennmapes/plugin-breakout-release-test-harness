@@ -76,26 +76,38 @@ native_create() {
     fi
 }
 
+#fetches device motion plugin
+plugman_fetch(){
+    which plugman &>/dev/null
+    if [ $? -eq 0 ]
+    then
+       
+	info "Fetching Plugin" 
+        warn "plugman --fetch --plugin $plugin --plugins_dir ./plugins"     
+        plugman --fetch --plugin $plugin --plugins_dir ./plugins
+        if [ "$?" = "0" ]
+        then
+            ok "Plugman successfully fetched $plugin into plugins directory."
+        else
+            error "Plugman did not fetch $plugin into plugins directory."
+        fi
+        echo
+
+    else
+        warn "Missing Plugman?" "npm install -g plugman"
+    fi
+}
+
+
 # attempts to install plugin into ios project called FooBar
 plugman_install() {
     which plugman &>/dev/null
     if [ $? -eq 0 ]
     then
-        
-        info "Installing iOS"
-        warn "plugman --platform ios --project ./FooBar --plugin $plugin"
-        plugman --platform ios --project ./FooBar --plugin $plugin
-        if [ "$?" = "0" ]
-        then
-            ok "Plugman successfully installed $plugin into iOS project FooBar."
-        else
-            error "Plugman did not install $plugin into iOS project FooBar."
-        fi
-        echo
-        
-        info "Installing Android" 
-        warn "plugman --platform android --project ./FooBaz --plugin $plugin"        
-        plugman --platform android --project ./FooBaz --plugin $plugin
+       
+	info "Installing Android" 
+        warn "plugman --platform android --project ./FooBaz --plugin cordova-plugin-device-motion --plugins_dir ./plugins"   
+        plugman --platform android --project ./FooBaz --plugin cordova-plugin-device-motion --plugins_dir ./plugins 
         if [ "$?" = "0" ]
         then
             ok "Plugman successfully installed $plugin into Android project FooBaz."
@@ -103,16 +115,31 @@ plugman_install() {
             error "Plugman did not install $plugin into Android project FooBaz."
         fi
         echo
+
+        info "Installing iOS"
+        warn "plugman --platform ios --project ./FooBar --plugin cordova-plugin-device-motion --plugins_dir ./plugins"   
+	plugman --platform ios --project ./FooBar --plugin cordova-plugin-device-motion --plugins_dir ./plugins
+ 	if [ "$?" = "0" ]
+        then
+            ok "Plugman successfully installed $plugin into iOS project FooBar."
+        else
+            error "Plugman did not install $plugin into iOS project FooBar."
+        fi    
+        echo
+
+        
     else
         warn "Missing Plugman?" "npm install -g plugman"
     fi
 }
 
-<<COMMENT
+
 copy_plugin_tests() {
-    copy ./cordova/plugins/cordova-plugin-device-motion/tests into ./www
+    info "copying tests files into www"
+    cp -rf plugins/cordova-plugin-device-motion/test/* FooBaz/assets/www/
+    cp -rf plugins/cordova-plugin-device-motion/test/* FooBar/www/
 }
-COMMENT
+
 
 # removes test artifacts
 cleanup() {
@@ -124,7 +151,9 @@ cleanup() {
 download
 unpack
 native_create
+plugman_fetch
 plugman_install
+copy_plugin_tests
 cleanup
 
 echo
