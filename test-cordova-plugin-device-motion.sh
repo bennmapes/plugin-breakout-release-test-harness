@@ -1,4 +1,4 @@
-set -e
+#set -e
 version=2.6.0
 release="cordova-$version"
 release_artifact="$release-src.zip"
@@ -157,7 +157,7 @@ copy_plugin_tests
 cleanup
 
 echo
-error "Tests above should fail in current case."
 error "Installing iOS, and Android should work!"
 warn "TODO" "Copy tests from mobile-spec into $plugin ./test dir."
+warn "TODO" "Copy docs from cordova-docs into into $plugin ./docs dir. (Talk to Mike about this.)"
 echo
