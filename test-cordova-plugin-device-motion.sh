@@ -4,6 +4,8 @@ release="cordova-$version"
 release_artifact="$release-src.zip"
 release_url="https://www.apache.org/dist/cordova/$release_artifact"
 plugin="https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git"
+android_url="https://github.com/stevengill/cordova-android.git"
+ios_url="https://github.com/stevengill/cordova-ios.git"
 
 # prints an error message
 # usage:
@@ -33,16 +35,30 @@ info() {
     echo "${grey}....${reset} ${blue}$1${reset} $2"
 }
 
-# downloads cordova
-download() {
-    if [ -e $release_artifact ]
+# downloads cordova android
+clone_android() {
+    if [ -e ./cordova-android ]
     then
-        info "Skipping Cordova download."
+        info "Skipping Cordova Android download"
     else
         echo
-        info "Downloading Cordova" $release_url
+        info "Downloading Cordova Android"
         echo
-        curl -O $release_url
+	git clone $android_url
+        echo
+    fi
+}
+
+# downloads cordova ios
+clone_ios() {
+    if [ -e ./cordova-ios ]
+    then
+        info "Skipping Cordova iOS download"
+    else
+        echo
+        info "Downloading Cordova iOS"
+        echo
+	git clone $ios_url
         echo
     fi
 }
@@ -65,14 +81,14 @@ native_create() {
         info "Skipping iOS project creation."
     else
         info "Creating iOS project FooBar."
-        ./$release/cordova-ios/bin/create FooBar org.apache.cordova.FooBar FooBar
+        ./cordova-ios/bin/create FooBar org.apache.cordova.FooBar FooBar
     fi
     if [ -e ./FooBaz ]
     then
         info "Skipping Android project creation."
     else
         info "Creating Android project FooBaz."
-        ./$release/cordova-android/bin/create FooBaz org.apache.cordova.FooBar FooBaz
+        ./cordova-android/bin/create FooBaz org.apache.cordova.FooBar FooBaz
     fi
 }
 
@@ -148,13 +164,14 @@ cleanup() {
 }
 
 
-download
-unpack
+clone_android
+clone_ios
+#unpack
 native_create
 plugman_fetch
 plugman_install
 copy_plugin_tests
-cleanup
+#cleanup
 
 echo
 error "Installing iOS, and Android should work!"
