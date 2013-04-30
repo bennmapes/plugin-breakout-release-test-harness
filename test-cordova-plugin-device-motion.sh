@@ -65,16 +65,6 @@ clone_ios() {
     fi
 }
 
-# unzips cordova, then ios, and android
-unpack() {
-    info "Unzipping $release_artifact"
-    unzip -qqo $release_artifact
-    cd ./$release
-    unzip -qqo "cordova-ios.zip" -d cordova-ios
-    unzip -qqo "cordova-android.zip" -d cordova-android
-    cd ..
-}
-
 # creates an ios project called FooBar
 # creates an android project called FooBaz
 native_create() {
@@ -100,7 +90,7 @@ plugman_fetch(){
     if [ $? -eq 0 ]
     then
        
-	info "Fetching Plugin" 
+	    info "Fetching Plugin" 
         warn "plugman --fetch --plugin $plugin --plugins_dir ./plugins"     
         plugman --fetch --plugin $plugin --plugins_dir ./plugins
         if [ "$?" = "0" ]
@@ -123,21 +113,23 @@ plugman_install() {
     if [ $? -eq 0 ]
     then
        
-	info "Installing Android" 
+	    info "Installing Android" 
         warn "plugman --platform android --project ./FooBaz --plugin cordova-plugin-device-motion --plugins_dir ./plugins"   
         plugman --platform android --project ./FooBaz --plugin cordova-plugin-device-motion --plugins_dir ./plugins 
+        
         if [ "$?" = "0" ]
         then
             ok "Plugman successfully installed $plugin into Android project FooBaz."
         else
             error "Plugman did not install $plugin into Android project FooBaz."
         fi
-        echo
 
+        echo
         info "Installing iOS"
         warn "plugman --platform ios --project ./FooBar --plugin cordova-plugin-device-motion --plugins_dir ./plugins"   
-	plugman --platform ios --project ./FooBar --plugin cordova-plugin-device-motion --plugins_dir ./plugins
- 	if [ "$?" = "0" ]
+	    plugman --platform ios --project ./FooBar --plugin cordova-plugin-device-motion --plugins_dir ./plugins
+ 	    
+        if [ "$?" = "0" ]
         then
             ok "Plugman successfully installed $plugin into iOS project FooBar."
         else
@@ -168,15 +160,9 @@ cleanup() {
 
 clone_android
 clone_ios
-#unpack
 native_create
 plugman_fetch
 plugman_install
 copy_plugin_tests
-#cleanup
+cleanup
 
-echo
-error "Installing iOS, and Android should work!"
-warn "TODO" "Copy tests from mobile-spec into $plugin ./test dir."
-warn "TODO" "Copy docs from cordova-docs into into $plugin ./docs dir. (Talk to Mike about this.)"
-echo
