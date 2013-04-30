@@ -1,8 +1,5 @@
 #set -e
 version=2.6.0
-release="cordova-$version"
-release_artifact="$release-src.zip"
-release_url="https://www.apache.org/dist/cordova/$release_artifact"
 plugin="https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git"
 android_url="https://git-wip-us.apache.org/repos/asf/cordova-android.git"
 ios_url="https://git-wip-us.apache.org/repos/asf/cordova-ios.git"
@@ -44,9 +41,9 @@ clone_android() {
         echo
         info "Downloading Cordova Android"
         echo
-	git clone $android_url
-	cd cordova-android && git fetch && git checkout 3.0.0 && cd ../
-	echo
+	    git clone $android_url
+	    cd cordova-android && git fetch && git checkout 3.0.0 && cd ../
+	    echo
     fi
 }
 
@@ -59,9 +56,9 @@ clone_ios() {
         echo
         info "Downloading Cordova iOS"
         echo
-	git clone $ios_url
+	    git clone $ios_url
         cd cordova-ios && git fetch && git checkout 3.0.0 && cd ../
-	echo
+	    echo
     fi
 }
 
@@ -106,8 +103,6 @@ plugman_fetch(){
     fi
 }
 
-
-# attempts to install plugin into ios project called FooBar
 plugman_install() {
     which plugman &>/dev/null
     if [ $? -eq 0 ]
@@ -143,26 +138,16 @@ plugman_install() {
     fi
 }
 
-
 copy_plugin_tests() {
-    info "copying tests files into www"
+    info "Copying tests files into www"
     cp -rf plugins/cordova-plugin-device-motion/test/* FooBaz/assets/www/
     cp -rf plugins/cordova-plugin-device-motion/test/* FooBar/www/
 }
 
-
-# removes test artifacts
-cleanup() {
-    info "Cleanup"
-    rm -rf $release
-}
-
-
+# behold! self documenting code
 clone_android
 clone_ios
 native_create
 plugman_fetch
 plugman_install
 copy_plugin_tests
-cleanup
-
