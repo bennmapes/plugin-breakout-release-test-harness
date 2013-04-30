@@ -4,8 +4,8 @@ release="cordova-$version"
 release_artifact="$release-src.zip"
 release_url="https://www.apache.org/dist/cordova/$release_artifact"
 plugin="https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git"
-android_url="https://github.com/stevengill/cordova-android.git"
-ios_url="https://github.com/stevengill/cordova-ios.git"
+android_url="https://git-wip-us.apache.org/repos/asf/cordova-android.git"
+ios_url="https://git-wip-us.apache.org/repos/asf/cordova-ios.git"
 
 # prints an error message
 # usage:
@@ -45,7 +45,8 @@ clone_android() {
         info "Downloading Cordova Android"
         echo
 	git clone $android_url
-        echo
+	cd cordova-android && git fetch && git checkout 3.0.0 && cd ../
+	echo
     fi
 }
 
@@ -59,7 +60,8 @@ clone_ios() {
         info "Downloading Cordova iOS"
         echo
 	git clone $ios_url
-        echo
+        cd cordova-ios && git fetch && git checkout 3.0.0 && cd ../
+	echo
     fi
 }
 
