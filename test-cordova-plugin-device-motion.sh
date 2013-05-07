@@ -1,5 +1,4 @@
 #set -e
-version=2.6.0
 plugin="https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git"
 android_url="https://git-wip-us.apache.org/repos/asf/cordova-android.git"
 ios_url="https://git-wip-us.apache.org/repos/asf/cordova-ios.git"
@@ -81,36 +80,14 @@ native_create() {
     fi
 }
 
-#fetches device motion plugin
-plugman_fetch(){
-    which plugman &>/dev/null
-    if [ $? -eq 0 ]
-    then
-       
-	    info "Fetching Plugin" 
-        warn "plugman --fetch --plugin $plugin --plugins_dir ./plugins"     
-        plugman --fetch --plugin $plugin --plugins_dir ./plugins
-        if [ "$?" = "0" ]
-        then
-            ok "Plugman successfully fetched $plugin into plugins directory."
-        else
-            error "Plugman did not fetch $plugin into plugins directory."
-        fi
-        echo
-
-    else
-        warn "Missing Plugman?" "npm install -g plugman"
-    fi
-}
-
 plugman_install() {
     which plugman &>/dev/null
     if [ $? -eq 0 ]
     then
        
 	    info "Installing Android" 
-        warn "plugman --platform android --project ./FooBaz --plugin cordova-plugin-device-motion --plugins_dir ./plugins"   
-        plugman --platform android --project ./FooBaz --plugin cordova-plugin-device-motion --plugins_dir ./plugins 
+        warn "plugman --platform android --project ./FooBaz --plugin $plugin"   
+        plugman --platform android --project ./FooBaz --plugin $plugin
         
         if [ "$?" = "0" ]
         then
@@ -121,9 +98,9 @@ plugman_install() {
 
         echo
         info "Installing iOS"
-        warn "plugman --platform ios --project ./FooBar --plugin cordova-plugin-device-motion --plugins_dir ./plugins"   
-	    plugman --platform ios --project ./FooBar --plugin cordova-plugin-device-motion --plugins_dir ./plugins
- 	    
+        warn "plugman --platform ios --project ./FooBar --plugin $plugin"   
+	    plugman --platform ios --project ./FooBar --plugin $plugin
+
         if [ "$?" = "0" ]
         then
             ok "Plugman successfully installed $plugin into iOS project FooBar."
@@ -148,6 +125,5 @@ copy_plugin_tests() {
 clone_android
 clone_ios
 native_create
-plugman_fetch
 plugman_install
 copy_plugin_tests
