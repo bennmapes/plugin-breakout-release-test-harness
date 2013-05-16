@@ -1,7 +1,11 @@
 #set -e
-plugin="https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git"
+plugins=("https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-orientation.git") 
+pluginName=("cordova-plugin-device-motion" "cordova-plugin-device-orientation")
+projectName=("deviceMotion" "deviceOrientation")
 android_url="https://git-wip-us.apache.org/repos/asf/cordova-android.git"
 ios_url="https://git-wip-us.apache.org/repos/asf/cordova-ios.git"
+ms_url="https://git-wip-us.apache.org/repos/asf/cordova-mobile-spec.git"
+
 
 # prints an error message
 # usage:
@@ -40,9 +44,9 @@ clone_android() {
         echo
         info "Downloading Cordova Android"
         echo
-	    git clone $android_url
-	    cd cordova-android && git fetch && git checkout 3.0.0 && cd ../
-	    echo
+        git clone $android_url
+        cd cordova-android && git fetch && git checkout 3.0.0 && cd ../
+        echo
     fi
 }
 
@@ -55,29 +59,44 @@ clone_ios() {
         echo
         info "Downloading Cordova iOS"
         echo
-	    git clone $ios_url
+        git clone $ios_url
         cd cordova-ios && git fetch && git checkout 3.0.0 && cd ../
-	    echo
+        echo
     fi
 }
 
-# creates an ios project called FooBar
-# creates an android project called FooBaz
+# downloads cordova mobilespec
+clone_mobilespec() {
+    if [ -e ./cordova-mobile-spec ]
+    then
+        info "Skipping Cordova Mobile-Spec download"
+    else
+        echo
+        info "Downloading Cordova Mobile-Spec"
+        echo
+        git clone $ms_url
+        echo
+    fi
+}
+
+# creates ios and android projects
 native_create() {
-    if [ -e ./FooBar ]
+    if [ -e ./$1ios ]
     then
-        info "Skipping iOS project creation."
+        info "Skipping iOS project creation for $1ios."
     else
-        info "Creating iOS project FooBar."
-        ./cordova-ios/bin/create FooBar org.apache.cordova.FooBar FooBar
+        info "Creating iOS project $1ios."
+        ./cordova-ios/bin/create $1ios org.apache.cordova.$1ios $1ios
     fi
-    if [ -e ./FooBaz ]
+
+    if [ -e ./$1android ]
     then
-        info "Skipping Android project creation."
+        info "Skipping Android project creation for $1android."
     else
-        info "Creating Android project FooBaz."
-        ./cordova-android/bin/create FooBaz org.apache.cordova.FooBar FooBaz
+        info "Creating Android project $1android."
+        ./cordova-android/bin/create $1android org.apache.cordova.$1android $1android
     fi
+
 }
 
 plugman_install() {
@@ -85,27 +104,27 @@ plugman_install() {
     if [ $? -eq 0 ]
     then
        
-	    info "Installing Android" 
-        warn "plugman --platform android --project ./FooBaz --plugin $plugin"   
-        plugman --platform android --project ./FooBaz --plugin $plugin
+        info "Installing Android" 
+        warn "plugman --platform android --project ./$2android --plugin $1"   
+        plugman --platform android --project ./$2android --plugin $1
         
         if [ "$?" = "0" ]
         then
-            ok "Plugman successfully installed $plugin into Android project FooBaz."
+            ok "Plugman successfully installed $1 into Android project $2android."
         else
-            error "Plugman did not install $plugin into Android project FooBaz."
+            error "Plugman did not install $1 into Android project $2android."
         fi
 
         echo
         info "Installing iOS"
-        warn "plugman --platform ios --project ./FooBar --plugin $plugin"   
-	    plugman --platform ios --project ./FooBar --plugin $plugin
+        warn "plugman --platform ios --project ./$2ios --plugin $1"   
+        plugman --platform ios --project ./$2ios --plugin $1
 
         if [ "$?" = "0" ]
         then
-            ok "Plugman successfully installed $plugin into iOS project FooBar."
+            ok "Plugman successfully installed $1 into iOS project $2ios."
         else
-            error "Plugman did not install $plugin into iOS project FooBar."
+            error "Plugman did not install $1 into iOS project $2ios."
         fi    
         echo
 
@@ -115,15 +134,71 @@ plugman_install() {
     fi
 }
 
-copy_plugin_tests() {
-    info "Copying tests files into www"
-    cp -rf plugins/cordova-plugin-device-motion/test/* FooBaz/assets/www/
-    cp -rf plugins/cordova-plugin-device-motion/test/* FooBar/www/
+copy_tests_ms() {
+    info "Copying tests files for mobile spec into $1android's www"
+    cp -rf $2/* $1android/assets/www/
+
+    info "Copying tests files for mobile spec into $1ios www"
+    mv -f $1ios/www/cordova.js ./cordova.js
+    cp -rf $2/* $1ios/www/
+    mv -f ./cordova.js $1ios/www/cordova.js
+
+    echo
 }
+
+copy_tests() {
+    info "Copying tests files for $1 into android www"
+    cp -rf $2android/cordova/plugins/$1/test/* $2android/assets/www/
+
+    info "Copying tests files for $1 into ios www"
+    mv -f $2ios/www/cordova.js ./cordova.js
+    cp -rf $2ios/cordova/plugins/$1/test/* $2ios/www/
+    mv -f ./cordova.js $2ios/www/cordova.js
+
+    echo
+}
+
 
 # behold! self documenting code
 clone_android
 clone_ios
-native_create
-plugman_install
-copy_plugin_tests
+
+# get Length of plugins array
+plen=${#plugins[@]}
+
+# run commands for every plugin
+for (( i=0; i<${plen}; i++ ));
+do 
+    native_create ${projectName[i]}
+    plugman_install ${plugins[i]} ${projectName[i]}
+    copy_tests ${pluginName[i]} ${projectName[i]}
+done
+
+# install all of the plugins in one project
+# test with mobile spec
+master_test(){
+    native_create "mastertest"
+    for (( i=0; i<${plen}; i++));
+    do
+        plugman_install ${plugins[i]} "mastertest"
+    done
+    clone_mobilespec
+    copy_tests_ms "mastertest" "./cordova-mobile-spec"
+}
+
+master_test
+
+#deletes all created projects
+clean(){
+    info "cleaning up project"
+    for (( i=0; i<${plen}; i++));
+    do
+        rm -rf ${projectName[i]}ios
+        rm -rf ${projectName[i]}android
+    done
+    rm -rf "mastertestios"
+    rm -rf "mastertestandroid"
+    rm -rf "cordova-android"
+    rm -rf "cordova-ios"
+    rm -rf "cordova-mobile-spec"
+}
