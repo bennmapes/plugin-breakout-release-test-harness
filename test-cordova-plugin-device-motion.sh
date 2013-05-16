@@ -139,9 +139,7 @@ copy_tests_ms() {
     cp -rf $2/* $1android/assets/www/
 
     info "Copying tests files for mobile spec into $1ios www"
-    mv -f $1ios/www/cordova.js ./cordova.js
     cp -rf $2/* $1ios/www/
-    mv -f ./cordova.js $1ios/www/cordova.js
 
     echo
 }
@@ -151,9 +149,7 @@ copy_tests() {
     cp -rf $2android/cordova/plugins/$1/test/* $2android/assets/www/
 
     info "Copying tests files for $1 into ios www"
-    mv -f $2ios/www/cordova.js ./cordova.js
     cp -rf $2ios/cordova/plugins/$1/test/* $2ios/www/
-    mv -f ./cordova.js $2ios/www/cordova.js
 
     echo
 }
