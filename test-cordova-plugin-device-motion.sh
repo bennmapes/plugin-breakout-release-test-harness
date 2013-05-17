@@ -1,7 +1,7 @@
 #set -e
-plugins=("https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-orientation.git") 
-pluginName=("cordova-plugin-device-motion" "cordova-plugin-device-orientation")
-projectName=("deviceMotion" "deviceOrientation")
+plugins=("https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-orientation.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-vibration.git") 
+pluginName=("cordova-plugin-device-motion" "cordova-plugin-device-orientation" "cordova-plugin-vibration")
+projectName=("deviceMotion" "deviceOrientation" "vibration")
 android_url="https://git-wip-us.apache.org/repos/asf/cordova-android.git"
 ios_url="https://git-wip-us.apache.org/repos/asf/cordova-ios.git"
 ms_url="https://git-wip-us.apache.org/repos/asf/cordova-mobile-spec.git"
