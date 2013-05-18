@@ -1,11 +1,9 @@
 We're breaking out the API surface of Cordova into discreet plugins. This script helps test the support tooling for that.
 
-Run the script, it should fail due to FooBar/FooBaz having accelerometer already (currenlty passing due to plugman bug).
+Run the test harness script, everything should pass and you can go run each project to test.
 
-For Android, go into FooBaz and edit res/xml/config.xml and remove the accelerometer line.
+Run the clean script to clean out your working directory. 
 
-For iOS, go into FooBar and edit FooBar/config.xml and remove the accelerometer line. Also from FooBar/Classes, remove CDVAccelerometer.h & CDVAccelerometer.m.
+Each plugin comes with its own docs + tests.
 
-Run script again, everything should pass and you can go run each project to test.
-
-Currently the test folder includes mobile specs index.html, accelerometer tests, automatic tests for accelerometer and and index page for the automatic tests. I propose we provide custom index.html files and copy over mobile specs automatic accelerometer tests and its normal accelerometer tests.
+This script creates a ios and android project for every plugin and installs the plugin into the project. Once completed, a master project for ios and android is built that all of the plugins get installed into and mobile spec is copied into the www directories.
