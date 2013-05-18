@@ -1,7 +1,12 @@
-FooBar
-FooBaz
-cordova-2.6.0-src.zip
 .DS_Store
 cordova-android
 cordova-ios
-plugins
+cordova-mobile-spec
+deviceMotionandroid
+deviceMotionios
+deviceOrientationandroid
+deviceOrientationios
+vibrationios
+vibrationandroid
+mastertestios
+mastertestandroid
