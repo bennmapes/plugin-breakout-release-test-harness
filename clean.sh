@@ -1,5 +1,5 @@
 #set -e
-projectName=("deviceMotion" "deviceOrientation" "vibration" "geolocation")
+projectName=("deviceMotion" "deviceOrientation" "vibration")
 
 # get Length of plugins array
 plen=${#projectName[@]}
