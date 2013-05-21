@@ -1,7 +1,7 @@
 #set -e
-plugins=("https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-orientation.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-vibration.git") 
-pluginID=("org.apache.cordova.core.AccelListener" "org.apache.cordova.core.CompassListener" "org.apache.cordova.core.Notification")
-projectName=("deviceMotion" "deviceOrientation" "vibration")
+plugins=("https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-motion.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-orientation.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-vibration.git" "https://git-wip-us.apache.org/repos/asf/cordova-plugin-battery-status.git") 
+pluginID=("org.apache.cordova.core.AccelListener" "org.apache.cordova.core.CompassListener" "org.apache.cordova.core.Notification" "org.apache.cordova.core.BatteryListener")
+projectName=("deviceMotion" "deviceOrientation" "vibration" "battery")
 android_url="https://git-wip-us.apache.org/repos/asf/cordova-android.git"
 ios_url="https://git-wip-us.apache.org/repos/asf/cordova-ios.git"
 ms_url="https://git-wip-us.apache.org/repos/asf/cordova-mobile-spec.git"
