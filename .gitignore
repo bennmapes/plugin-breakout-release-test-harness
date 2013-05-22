@@ -10,3 +10,7 @@ vibrationios
 vibrationandroid
 mastertestios
 mastertestandroid
+
+temp
+node_modules
+results.json
