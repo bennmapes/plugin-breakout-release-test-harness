@@ -25,8 +25,11 @@ module.exports = {
     'cordova-plugin-device-orientation' : {
         name : 'org.apache.cordova.core.CompassListener',
         url  : 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-device-orientation.git'
+    },
+    'cordova-plugin-vibration' : {
+        name : 'org.apache.cordova.core.Notification',
+        url  : 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-vibration.git'
     }
            /*
-            , 'org.apache.cordova.core.Notification'      : 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-vibration.git'
             , 'org.apache.cordova.core.BatteryListener'   : 'https://git-wip-us.apache.org/repos/asf/cordova-plugin-battery-status.git'};*/
 };
